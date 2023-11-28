@@ -4,18 +4,12 @@ import PropTypes from "prop-types";
 const ButtonUi = ({
   mt = 4,
   colorScheme = "teal",
-  isLoading,
+
   children,
   ...rest
 }) => {
   return (
-    <Button
-      mt={mt}
-      colorScheme={colorScheme}
-      isLoading={isLoading}
-      type="submit"
-      {...rest}
-    >
+    <Button mt={mt} colorScheme={colorScheme} type="submit" {...rest}>
       {children}
     </Button>
   );
@@ -24,7 +18,6 @@ const ButtonUi = ({
 ButtonUi.propTypes = {
   mt: PropTypes.number,
   colorScheme: PropTypes.string,
-  isLoading: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
 };
 

@@ -1,44 +1,67 @@
+import { useEffect, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   FormErrorMessage,
   FormLabel,
   FormControl,
   Input,
-  // Button,
 } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "src/store/slices/UsersSlice";
 import { toast } from "react-toastify";
 import ButtonUi from "./ui/Button";
+import { getUsersData } from "src/store/slices/UsersSlice";
 
 const Form = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm();
-
-  // function onSubmit(values) {
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       alert(JSON.stringify(values, null, 2));
-  //       resolve();
-  //     }, 3000);
-  //   });
-  // }
   const dispatch = useDispatch();
+  const [suggestions, setSuggestions] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const datas = useSelector((state) => state.user.usersData);
+
+  const initFetch = useCallback(() => {
+    dispatch(getUsersData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    initFetch();
+  }, [initFetch]);
+
   const onSubmit = async (values) => {
     try {
-      await dispatch(createUser(values));
+      const emailExists = datas.some((user) => user.email === values.email);
 
-      toast.success("User created successfully!");
-      reset();
+      const filteredSuggestions = datas
+        .filter((user) =>
+          user.email.toLowerCase().includes(values.toLowerCase())
+        )
+        .map((user) => user.email);
+
+      setSuggestions(filteredSuggestions);
+
+      if (emailExists) {
+        toast.error("Email already exists!");
+      } else {
+        await dispatch(createUser(values));
+
+        toast.success("User created successfully!");
+        reset();
+      }
     } catch (error) {
       console.error("Error creating user:", error);
 
       toast.error("Error creating user");
     }
+  };
+
+  const onSuggestionClick = (value) => {
+    setInputValue(value);
+    setSuggestions([]);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -52,27 +75,48 @@ const Form = () => {
           })}
         />
         <FormErrorMessage>
-          {errors.name && errors.name.message}
+          {errors.name?.message && errors.name.message}
         </FormErrorMessage>
       </FormControl>
-      <FormControl isInvalid={errors.name}>
+      <FormControl isInvalid={errors.email}>
         <FormLabel htmlFor="email" mt={2}>
           Email
         </FormLabel>
         <Input
           id="email"
           placeholder="email"
+          value={inputValue}
           {...register("email", {
-            required: "Please provide email",
+            required: "Email is required",
+            validate: {
+              maxLength: (v) =>
+                v.length <= 50 || "The email should have at most 50 characters",
+              matchPattern: (v) =>
+                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                "Email address must be a valid address",
+            },
           })}
         />
         <FormErrorMessage>
-          {errors.email && errors.email.message}
+          {errors.email?.message && errors.email.message}
         </FormErrorMessage>
       </FormControl>
-      <ButtonUi isLoading={isSubmitting} type="submit">
+      <ButtonUi type="submit" colorScheme="blue">
         Submit User
       </ButtonUi>
+      {suggestions.length > 0 && (
+        <ul>
+          {suggestions.map((suggestion, index) => (
+            <li
+              key={index}
+              onClick={() => onSuggestionClick(suggestion)}
+              style={{ cursor: "pointer" }}
+            >
+              {suggestion}
+            </li>
+          ))}
+        </ul>
+      )}
     </form>
   );
 };

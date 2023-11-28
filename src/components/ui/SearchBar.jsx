@@ -20,6 +20,7 @@ import {
   getUserDetails,
   deleteUser,
 } from "src/store/slices/UsersSlice";
+import { toast } from "react-toastify";
 import ButtonUi from "./Button";
 import ModalUi from "./ModalUi";
 
@@ -40,21 +41,27 @@ const SearchBar = () => {
   useEffect(() => {
     initFetch();
   }, [initFetch]);
-  console.log(datas, " searchResults");
-  console.log(searchResults, " searchResults");
 
   const handleSearch = async () => {
     try {
       const results = datas.filter((user) => user.email.includes(searchTerm));
 
       if (results.length === 0) {
-        console.warn(`User with email '${searchTerm}' not found.`);
+        setSearchResults([]);
+        toast.error(`User with email '${searchTerm}' not found.`);
       } else {
         console.log(results, "searchResults");
       }
       setSearchResults(results);
     } catch (error) {
       console.error("Failed to fetch data:", error);
+      toast.error("Failed to fetch data:", error);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
     }
   };
 
@@ -63,7 +70,6 @@ const SearchBar = () => {
   };
 
   const handleClearSearch = () => {
-    console.log("Clear search button clicked");
     setSearchTerm("");
     setSearchResults([]);
   };
@@ -75,12 +81,12 @@ const SearchBar = () => {
 
         onClose();
         setUserDetails(null);
-        console.log("User deleted successfully.");
+        toast.success("User deleted successfully.");
       } else {
-        console.warn("No user selected for deletion.");
+        toast.error("No user selected for deletion.");
       }
     } catch (error) {
-      console.error("Failed to delete user:", error);
+      toast.error("Failed to delete user:", error);
     }
   };
 
@@ -90,9 +96,8 @@ const SearchBar = () => {
 
       const user = userDetails.payload;
       setUserDetails(user);
-      console.log("User details:", userDetails);
     } catch (error) {
-      console.error("Failed to fetch user details:", error);
+      toast.error("Failed to fetch user details:", error);
     }
   };
 
@@ -112,10 +117,9 @@ const SearchBar = () => {
             placeholder="Search"
             value={searchTerm}
             onChange={handleInputChange}
+            onKeyDown={handleKeyPress}
           />
-          {/* <InputRightElement>
-          <IoIosCloseCircle color="green.500" />
-        </InputRightElement> */}
+
           {searchTerm && (
             <IconButton
               variant="ghost"
@@ -127,7 +131,7 @@ const SearchBar = () => {
         </InputGroup>
       </Stack>
 
-      {searchResults.length > 0 ? (
+      {searchResults.length > 0 && (
         <Wrap spacing="30px" mt="10px" borderWidth="1px" align="center">
           <WrapItem>
             <Center w="460px">
@@ -160,16 +164,6 @@ const SearchBar = () => {
             )}
           </WrapItem>
         </Wrap>
-      ) : (
-        <ButtonUi
-          mt={4}
-          colorScheme="teal"
-          isLoading={isSubmitting}
-          onClick={handleSearch}
-          isDisabled={!searchTerm.trim()}
-        >
-          Search
-        </ButtonUi>
       )}
     </>
   );

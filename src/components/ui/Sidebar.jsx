@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 import {
   Box,
   CloseButton,
@@ -14,9 +16,21 @@ import { Link } from "react-router-dom";
 import Navbar from "../Navbar";
 
 const Sidebar = ({ onClose }) => {
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  useEffect(() => {
+    const storedState = localStorage.getItem("sidebarState");
+    if (storedState !== null) {
+      setIsExpanded(storedState === "expanded");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("sidebarState", isExpanded ? "expanded" : "collapsed");
+  }, [isExpanded]);
+
   return (
     <>
-      {" "}
       <Box
         bg={useColorModeValue("white", "gray.900")}
         borderRight="1px"
@@ -24,6 +38,7 @@ const Sidebar = ({ onClose }) => {
         w={{ base: "full", md: 60 }}
         pos="fixed"
         h="full"
+        display={isExpanded ? "block" : "none"}
       >
         <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
           <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">

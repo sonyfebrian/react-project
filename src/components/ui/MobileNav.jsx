@@ -17,6 +17,10 @@ const MobileNav = ({ onOpen }) => {
       return "Sales Dashboard";
     } else if (location.pathname === "/users") {
       return "Users Dashboard";
+    } else if (location.pathname === "/register") {
+      return "Users Registration";
+    } else if (location.pathname === "/search-user") {
+      return "Search User";
     } else {
       return "Dashboard";
     }
@@ -27,6 +31,10 @@ const MobileNav = ({ onOpen }) => {
       return "List of Sales data";
     } else if (location.pathname === "/users") {
       return "List of users data";
+    } else if (location.pathname === "/register") {
+      return "Add new User";
+    } else if (location.pathname === "/search-user") {
+      return "Search existing user";
     } else {
       return "Dashboard";
     }
