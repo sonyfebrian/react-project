@@ -1,25 +1,25 @@
 import { FixedSizeGrid as Grid } from "react-window";
 
 import Dashboard from "src/components/Dashboard";
-import Cell from "src/components/SalesCell";
+import UsersCell from "src/components/UsersCell";
 
-const Sales = () => {
+const Users = () => {
   return (
     <>
       <Dashboard>
         <Grid
-          columnCount={7}
+          columnCount={30}
           columnWidth={100}
           height={500}
           rowHeight={35}
-          width={720}
+          width={980}
           rowCount={1000}
         >
-          {Cell}
+          {UsersCell}
         </Grid>
       </Dashboard>
     </>
   );
 };
 
-export default Sales;
+export default Users;

@@ -22,6 +22,16 @@ const MobileNav = ({ onOpen }) => {
     }
   };
 
+  const getTitle = () => {
+    if (location.pathname === "/") {
+      return "List of Sales data";
+    } else if (location.pathname === "/users") {
+      return "List of users data";
+    } else {
+      return "Dashboard";
+    }
+  };
+
   return (
     <>
       {" "}
@@ -60,9 +70,7 @@ const MobileNav = ({ onOpen }) => {
             {getPageTitle()}
           </Text>
           <Text fontSize="xs" color="blue.600">
-            {getPageTitle === "Users Dashboard"
-              ? "List of Users data"
-              : "List of Sales data"}
+            {getTitle()}
           </Text>
         </VStack>
       </Flex>

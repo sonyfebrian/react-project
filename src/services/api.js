@@ -12,4 +12,18 @@ const getSales = async () => {
     throw new Error(error);
   }
 };
-export default getSales;
+
+const getUsers = async () => {
+  try {
+    const response = await API.get("/users");
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const ApiService = {
+  getSales,
+  getUsers,
+};
+export default ApiService;
