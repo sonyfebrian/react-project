@@ -8,6 +8,8 @@ const Cell = ({ columnIndex, rowIndex, style }) => {
 
   const datas = useSelector((state) => state.sales.salesData);
 
+
+
   const initFetch = useCallback(() => {
     dispatch(getSalesData());
   }, [dispatch]);

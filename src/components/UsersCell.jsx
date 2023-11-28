@@ -6,9 +6,7 @@ import PropTypes from "prop-types";
 const UsersCell = ({ columnIndex, rowIndex, style }) => {
   const dispatch = useDispatch();
 
-  const datas = useSelector((state) => state.users.salesData);
-
-  console.log(datas);
+  const datas = useSelector((state) => state.user.usersData);
 
   const initFetch = useCallback(() => {
     dispatch(getUsersData());

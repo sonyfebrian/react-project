@@ -22,8 +22,38 @@ const getUsers = async () => {
   }
 };
 
+const createUsers = async (data) => {
+  try {
+    const response = await API.post("/users", data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getUserDetails = async (userId) => {
+  try {
+    const response = await API.get(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const deleteUser = async (userId) => {
+  try {
+    const response = await API.delete(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const ApiService = {
   getSales,
   getUsers,
+  getUserDetails,
+  createUsers,
+  deleteUser,
 };
 export default ApiService;

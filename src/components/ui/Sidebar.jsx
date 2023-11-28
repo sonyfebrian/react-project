@@ -40,10 +40,10 @@ const Sidebar = ({ onClose }) => {
         <Link to="/users">
           <Navbar icon={<HiMiniUsers />}> Users</Navbar>
         </Link>
-        <Link to="/">
+        <Link to="/register">
           <Navbar icon={<HiMiniUserPlus />}>Registration</Navbar>
         </Link>
-        <Link to="/">
+        <Link to="/search-user">
           <Navbar icon={<HiOutlineSearch />}>Search</Navbar>
         </Link>
       </Box>
